@@ -41,4 +41,15 @@ void main() {
 }
 
 /* Add other Implementation File Code Here */
- 
+void print_statistics(unsigned char *test){
+  unsigned char min = find_minimum(test, SIZE);
+  unsigned char max = find_maximum(test, SIZE);
+  unsigned char mean = find_mean(test, SIZE);
+  unsigned char med = find_median(test, SIZE);
+
+  printf("Statistics:\n");
+  printf("\tMinimum value is %d\n", min);
+  printf("\tMaximum value is %d\n", max);
+  printf("\tMean value is %d\n", mean);
+  printf("\tMedian value is %d\n", med);
+}
