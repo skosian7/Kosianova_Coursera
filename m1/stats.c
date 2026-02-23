@@ -39,22 +39,24 @@ void main() {
   /* Statistics and Printing Functions Go Here */
 
   print_array(test, SIZE);
+  print_statistics(test, SIZE);
 
 }
 
 /* Add other Implementation File Code Here */
 
-void print_statistics(unsigned char *test){
+void print_statistics(unsigned char *test, int len){
   unsigned char min = find_minimum(test, SIZE);
   unsigned char max = find_maximum(test, SIZE);
   unsigned char mean = find_mean(test, SIZE);
+  sort_array(test, SIZE);
   unsigned char med = find_median(test, SIZE);
 
-  printf("Statistics:\n");
+  printf("Statistics:\n\n");
   printf("\tMinimum value is %d\n", min);
   printf("\tMaximum value is %d\n", max);
   printf("\tMean value is %d\n", mean);
-  printf("\tMedian value is %d\n", med);
+  printf("\tMedian value is %d\n\n", med);
 }
 
 void print_array(unsigned char *test, int len)
@@ -62,7 +64,7 @@ void print_array(unsigned char *test, int len)
   printf("\nThe array:\n");
   for(int i = 0; i < len; i++)
   {
-    if(i%8 == 0)printf("\n\t");
+    if(i%8 == 0)printf("\n\t%-5d", test[i]);
     else printf("%-5d", test[i]);
   }
   printf("\n\n");
@@ -70,12 +72,24 @@ void print_array(unsigned char *test, int len)
 
 unsigned char find_median(unsigned char *test, int len)
 {
-  return 0;
+  int indexx = 0;
+  unsigned char med = 0;
+  if(len%2 == 0)
+  {
+    indexx = len / 2;
+    med = (test[indexx] + test[indexx + 1]) / 2;
+
+  }else
+  {
+    indexx = (len / 2) + 1;
+    med = test[indexx];
+  }
+  return med;
 }
 
 unsigned char find_mean(unsigned char *test, int len)
 {
-  int summ = 0;
+  unsigned char summ = 0;
 
   for(int i = 0; i < len; i++)
   {
@@ -84,5 +98,44 @@ unsigned char find_mean(unsigned char *test, int len)
 
   return summ/len;
 }
+
+unsigned char find_maximum(unsigned char *test, int len)
+{
+  unsigned char max = test[0];
+  for(int i = 0; i < len; i++)
+  {
+    if(max < test[i])max = test[i];
+  }
+  return max;
+}
+
+unsigned char find_minimum(unsigned char *test, int len)
+{
+  unsigned char min = test[0];
+  for(int i = 0; i < len; i++)
+  {
+    if(min > test[i])min = test[i];
+  }
+  return min;
+}
+
+void sort_array(unsigned char *test, int len)
+{
+  for(int i = 1; i < len; i++)
+  {
+    int key = test[i];
+    int j = i -1;
+
+    while(j >= 0 && test[j] < key)
+    {
+      test[j + 1] = test[j];
+      j = j - 1;
+    }
+    test[j+1] = key;
+  }
+}
+
+
+
 
 

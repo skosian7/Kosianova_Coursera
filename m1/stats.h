@@ -28,12 +28,13 @@
  *
  * prints minimum, maximum, mean, and median of a given array
  *
- * @param <unsigned char array>
+ * @param <test> <unsigned char array>
+ * @param <len> <length of the array>
  *
  * @return void
  */
 
-void print_statistics(unsigned char *test);
+void print_statistics(unsigned char *test, int len);
 
 /**
  * @brief <Prints an array of unsigned chars>
