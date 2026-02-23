@@ -38,9 +38,12 @@ void main() {
   /* Other Variable Declarations Go Here */
   /* Statistics and Printing Functions Go Here */
 
+  print_array(test, SIZE);
+
 }
 
 /* Add other Implementation File Code Here */
+
 void print_statistics(unsigned char *test){
   unsigned char min = find_minimum(test, SIZE);
   unsigned char max = find_maximum(test, SIZE);
@@ -53,3 +56,33 @@ void print_statistics(unsigned char *test){
   printf("\tMean value is %d\n", mean);
   printf("\tMedian value is %d\n", med);
 }
+
+void print_array(unsigned char *test, int len)
+{
+  printf("\nThe array:\n");
+  for(int i = 0; i < len; i++)
+  {
+    if(i%8 == 0)printf("\n\t");
+    else printf("%-5d", test[i]);
+  }
+  printf("\n\n");
+}
+
+unsigned char find_median(unsigned char *test, int len)
+{
+  return 0;
+}
+
+unsigned char find_mean(unsigned char *test, int len)
+{
+  int summ = 0;
+
+  for(int i = 0; i < len; i++)
+  {
+    summ += test[i];
+  }
+
+  return summ/len;
+}
+
+
