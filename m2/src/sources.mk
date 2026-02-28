@@ -25,5 +25,15 @@ else
 endif
 
 # Add your include paths to this variable
-INCLUDES =  
+INCLUDES = 
+ifeq ($(PLATFORM),HOST)
+    INCLUDES = 
+		-Iinclude/common
+        
+else
+    INCLUDES = 
+		-Iinclude/common\
+		-Iinclude/msp432\
+		-Iinclude/CMSIS    
+endif 
 
