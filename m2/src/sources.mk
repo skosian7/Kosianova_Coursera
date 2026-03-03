@@ -27,13 +27,11 @@ endif
 # Add your include paths to this variable
 
 ifeq ($(PLATFORM),HOST)
+    INCLUDES = -I../include/common        
+else ifeq ($(PLATFORM),MSP432)
     INCLUDES = \ 
-		-Iinclude/common
-        
-else
-    INCLUDES = \ 
-		-Iinclude/common\
-		-Iinclude/msp432\
-		-Iinclude/CMSIS    
+		-I../include/common\
+		-I../include/msp432\
+		-I../include/CMSIS    
 endif 
 

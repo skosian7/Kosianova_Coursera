@@ -24,39 +24,53 @@
 include sources.mk
 
 # Platform Overrides
-PLATFORM = 
-
 
 # Architectures Specific Flags
 LINKER_FILE = -T ../msp432p401r.lds
 CPU = \
 	-mcpu=cortex-m4\
-	-mthumb\
+	-mthumb
 ARCH = \
 	-march=armv7e-m\
 	-mfloat-abi=hard\
-	-mfpu=fpv4-sp-d16\
+	-mfpu=fpv4-sp-d16
 SPECS = --specs=nosys.specs
 
 # Compiler Flags and Defines
-CC = 
-LD = 
-LDFLAGS = 
+ 
+LDFLAGS = $(LINKER_FILE) $(CPU) $(ARCH) $(SPECS)
 CFLAGS =\
 	-Wall\
 	-Werror\
 	-g\
 	-O0\
 	-std=c99
-CPPFLAGs = 
+
 
 ifeq ($(PLATFORM),HOST)
 	CC = gcc
+	LD = gcc
 	PLATFORM_TARGET = -DHOST
+	OBJUMP = objump
+	CPPFLAGS += $(PLATFORM_TARGET) 
     
-else ifeq($(PLATFORM), MSP432)
+else ifeq ($(PLATFORM),MSP432)
 	CC = arm-none-eabi-gcc
+	LD = arm-none-eabi-gcc
 	PLATFORM_TARGET = -DMSP432
-   
+	OBJUMP = arm-none-eabi-gcc
+	CFLAGS += $(CPU) $(ARCH)
+	CPPFLAGS += $(PLATFORM_TARGET) 
+
 endif
 
+%.i: %.c
+	$(CC) $(CFLAGS) $(CPPFLAGS) $(INCLUDES) -E $< -o $@
+
+%.asm: %.c
+	$(CC) $(CFLAGS) $(CPPFLAGS) $(INCLUDES) $(OBJUMP) -S $< -o $@
+
+%.o: %.c
+	$(CC) $(CFLAGS) $(CPPFLAGS) $(INCLUDES) -c $< -o $@
+
+ 
