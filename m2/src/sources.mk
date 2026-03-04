@@ -29,8 +29,7 @@ endif
 ifeq ($(PLATFORM),HOST)
     INCLUDES = -I../include/common        
 else ifeq ($(PLATFORM),MSP432)
-    INCLUDES = \ 
-		-I../include/common\
+    INCLUDES = -I../include/common\
 		-I../include/msp432\
 		-I../include/CMSIS    
 endif 
