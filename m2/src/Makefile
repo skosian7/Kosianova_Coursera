@@ -51,14 +51,14 @@ ifeq ($(PLATFORM),HOST)
 	CC = gcc
 	LD = gcc
 	PLATFORM_TARGET = -DHOST
-	OBJUMP = objump
+	OBJDUMP = objdump
 	CPPFLAGS += $(PLATFORM_TARGET) 
     
 else ifeq ($(PLATFORM),MSP432)
 	CC = arm-none-eabi-gcc
 	LD = arm-none-eabi-gcc
 	PLATFORM_TARGET = -DMSP432
-	OBJUMP = arm-none-eabi-gcc
+	OBJDUMP = arm-none-eabi-gcc
 	CFLAGS += $(CPU) $(ARCH)
 	CPPFLAGS += $(PLATFORM_TARGET) 
 
@@ -68,9 +68,22 @@ endif
 	$(CC) $(CFLAGS) $(CPPFLAGS) $(INCLUDES) -E $< -o $@
 
 %.asm: %.c
-	$(CC) $(CFLAGS) $(CPPFLAGS) $(INCLUDES) $(OBJUMP) -S $< -o $@
+	$(CC) $(CFLAGS) $(CPPFLAGS) $(INCLUDES) -S $< -o $@
+
+c1m2.asm: c1m2.out
+	$(OBJDUMP) -d $< > $@
 
 %.o: %.c
-	$(CC) $(CFLAGS) $(CPPFLAGS) $(INCLUDES) -c $< -o $@
+	$(CC) $(CFLAGS) $(CPPFLAGS) $(INCLUDES) -MD -MP -c $< -o $@
 
- 
+.PHONY: compile-all
+compile-all: %.c
+	$(CC) $(CFLAGS) $(CPPFLAGS) $(INCLUDES)  $< -o $@
+
+.PHONY: build
+build: $(OBJECTS)
+	$(CC) $(OBJECTS) $(CFLAGS) $(LDFLAGS) -Map=c1m2.map   $< -o c1m2.out 
+
+.PHONY: clean
+clean:
+	rm %.i %.asm %.o
