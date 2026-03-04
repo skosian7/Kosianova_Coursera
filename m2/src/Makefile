@@ -38,7 +38,7 @@ SPECS = --specs=nosys.specs
 
 # Compiler Flags and Defines
  
-LDFLAGS = $(LINKER_FILE) $(CPU) $(ARCH) $(SPECS)
+
 CFLAGS =\
 	-Wall\
 	-Werror\
@@ -58,11 +58,14 @@ else ifeq ($(PLATFORM),MSP432)
 	CC = arm-none-eabi-gcc
 	LD = arm-none-eabi-gcc
 	PLATFORM_TARGET = -DMSP432
-	OBJDUMP = arm-none-eabi-gcc
+	OBJDUMP = arm-none-eabi-objdump
 	CFLAGS += $(CPU) $(ARCH)
 	CPPFLAGS += $(PLATFORM_TARGET) 
+	LDFLAGS = $(LINKER_FILE) $(CPU) $(ARCH) $(SPECS)
 
 endif
+
+OBJECTS = $(SOURCES:.c=.o)
 
 %.i: %.c
 	$(CC) $(CFLAGS) $(CPPFLAGS) $(INCLUDES) -E $< -o $@
@@ -77,13 +80,15 @@ c1m2.asm: c1m2.out
 	$(CC) $(CFLAGS) $(CPPFLAGS) $(INCLUDES) -MD -MP -c $< -o $@
 
 .PHONY: compile-all
-compile-all: %.c
-	$(CC) $(CFLAGS) $(CPPFLAGS) $(INCLUDES)  $< -o $@
-
+compile-all: $(OBJECTS)
+	
 .PHONY: build
 build: $(OBJECTS)
-	$(CC) $(OBJECTS) $(CFLAGS) $(LDFLAGS) -Map=c1m2.map   $< -o c1m2.out 
+	$(CC) $(OBJECTS) $(LDFLAGS) -Wl,-Map=c1m2.map -o c1m2.out 
+	size c1m2.out
 
 .PHONY: clean
 clean:
-	rm %.i %.asm %.o
+	rm -f *i *asm *o *d *out *map
+
+-include $(OBJECTS:.o=.d)
